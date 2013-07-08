@@ -256,12 +256,12 @@ var questions =  [
                 "correctAnswer": "3"
             },
             {
-                "Question": "The World Health Organization predicts that there will be how many overweight adults in the world by 2015?",
-                "1": "2.3 billion",
-                "2": "1.8 billion",
-                "3": "700 million",
-                "4": "350 million",
-                "correctAnswer": "1"
+                "Question": "Which is NOT a layer of the skin?",
+                "1": "Stratum Corneum",
+                "2": "Choroid",
+                "3": "Squamous Cell",
+                "4": "Basal Cell",
+                "correctAnswer": "2"
             },
             {
                 "Question": "On average, which hair color is associated with the highest density of hair growth on the head?",

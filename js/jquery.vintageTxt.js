@@ -31,9 +31,9 @@
   $.fn.vintageTxt.settings = {
      'overlayImage'     : null
     ,'text'             : ['All your base','are belong to us.']
-    ,'maxRows'          : 10
+    ,'maxRows'          : 15
     ,'textSpeed'        : 30
-    ,'linePause'        : 800
+    ,'linePause'        : 10
     ,'promptEnabled'    : true
     ,'autoStart'        : true
     ,'onEnterKey'       : null
@@ -125,7 +125,7 @@
           self.settings.promptEnabled = false;
           var next = null;
           if ( textArrays.length ) {
-            next = function(){setTimeout(playArray, 800);};
+            next = function(){setTimeout(playArray, self.settings.linePause);};
           } else {
             self.settings.promptEnabled = showPromptOnEnd;
             next = finalOnFinishedTyping;
@@ -248,7 +248,7 @@
           if( index != settings.text.length )
           {
             str_length = settings.text[index].length;
-            setTimeout(typeText,800);
+            setTimeout(typeText,self.settings.linePause);
           } else {
             self.endTyping();
           }

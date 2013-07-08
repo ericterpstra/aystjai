@@ -26,10 +26,19 @@ $(function(){
             answers : [],
             timerStart : 0,
             timerEnd : 0,
-            score : 0
+            name: "",
+            score : 0,
+            correct: 0
+        },
+
+        P : {
+            Board : {},
+            query : {}
         },
 
         init : function() {
+
+            // INIT BUTTON CLICK HANDLERS
             for (var i = 1; i < JIQ.buttons.length; i++ ) {
                 JIQ.buttons[i].click(function(e, btn){
                     var btnValue =  +$(this).attr('data-value')
@@ -41,6 +50,15 @@ $(function(){
                     }
                 });
             }
+
+            // SET UP PARSE
+            Parse.initialize("hZ0hl9heShCM59t71ycXjmkQzrbL7F8lafLSqmmT", "oND7OhOLY1XSa59D7LlOdMbR46XT5CsLEeimJD1Q");
+            JIQ.P.Board = Parse.Object.extend('Scores');
+            JIQ.P.query = new Parse.Query(JIQ.P.Board);
+            JIQ.P.query.descending('score');
+            JIQ.P.query.limit(12);
+
+
             JIQ.begin();
         },
 
@@ -59,20 +77,25 @@ $(function(){
             "2013 EDITION",
             " ",
             "PLEASE CHOOSE AN OPTION:",
-            "1. TEST YOUR MENTAL FORTITUDE.",
-            "2. VIEW HIGH SCORE LIST."
+            "1. BEGIN THE TRIVIA!",
+            "2. VIEW HIGH SCORE LIST.",
+            "3. WHAT IS THIS?",
+            "4. CATS."
         ],
 
         begin : function() {
             this.el.vintageTxt({
                 text: JIQ.introText,
-                textSpeed: 1,
+                textSpeed: 15,
                 linePause: 10,
                 promptEnabled: false
             });
 
             JIQ.setButtonAction(1, 'startGame', true);
             JIQ.setButtonAction(2, 'viewHighScores', false);
+            JIQ.setButtonAction(3, 'aboutGame', false);
+            JIQ.setButtonAction(4, 'catFact',false);
+            //JIQ.setButtonAction(4, 'endQuiz',false);
         },
 
         startGame : function() {
@@ -88,7 +111,7 @@ $(function(){
         },
 
         selectJenCategory : function() {
-            var choices = [];
+            var choices = ["Jen's Categories:"];
             $(jenCategories).each(function(i, item){
                 choices.push((i+1).toString() + ". " + item.name);
                 if(choices.length === jenCategories.length){
@@ -107,7 +130,7 @@ $(function(){
         },
 
         selectIanCategory : function() {
-            var choices = [];
+            var choices = ["Ian's Categories:"];
             $(ianCategories).each(function(i, item){
                 choices.push((i+1).toString() + ". " + item.name);
                 if(choices.length === ianCategories.length){
@@ -201,6 +224,7 @@ $(function(){
                     answerBonus = (100 / (answerTime / 10 * 4)) | 0;
                 }
                 JIQ.Data.score += (100 + answerBonus);
+                JIQ.Data.correct += 1;
             }
 
             if ( nextQuestionNum >= JIQ.Data.questions.length ) {
@@ -215,14 +239,58 @@ $(function(){
         endQuiz : function() {
             JIQ.clearButtonHandlers();
             JIQ.el.vintageTxt('reset',[
-                "Congratulations!",
+                "And we're done!",
+                "You got " + JIQ.Data.correct + " / 10 correct.",
                 "You scored " + JIQ.Data.score.toString(),
                 " ",
-                "1. Start Again",
-                "2. Main Menu"
-            ],{onFinishedTyping: null});
-            JIQ.setButtonAction(1, 'selectJenCategory', false);
-            JIQ.setButtonAction(2, 'begin', false);
+                "Please Enter Your Name:"
+            ],
+            {
+                onFinishedTyping: function(){$('#vtxt_ContentInput').focus()},
+                promptEnabled: true,
+                onEnterKey: JIQ.acceptFinalScore
+            });
+            JIQ.setButtonAction(1, 'acceptFinalScore', true);
+        },
+
+        acceptFinalScore : function(data) {
+            JIQ.Data.name = $('#vtxt_ContentInput').val();
+            JIQ.saveScoreToParse();
+
+            JIQ.clearButtonHandlers();
+            JIQ.el.vintageTxt('reset',[
+                "Thanks " + JIQ.Data.name,
+                "Please choose what to do next:",
+                "1. View High Scores",
+                "2. More Trivia!",
+                "3. Main Menu"
+            ],
+            {
+                onFinishedTyping: null,
+                promptEnabled: false,
+                onEnterKey: null
+            });
+            JIQ.setButtonAction(1, 'viewHighScores', false);
+            JIQ.setButtonAction(2, 'selectJenCategory', false);
+            JIQ.setButtonAction(3, 'begin', false);
+        },
+
+        saveScoreToParse : function(){
+            var gameScore = new JIQ.P.Board();
+            gameScore.set('name', JIQ.Data.name);
+            gameScore.set('score', JIQ.Data.score);
+            gameScore.set('correct', JIQ.Data.correct);
+            gameScore.set('ianCategory', JIQ.Data.ianCategory.name);
+            gameScore.set('jenCategory', JIQ.Data.jenCategory.name);
+
+            gameScore.save(null, {
+                success: function(gameScore) {
+                    console.log("Score Saved to Leaderboard");
+                },
+                error: function(gameScore, error) {
+                    console.log("Failed to Save Score. " + error.description);
+                }
+            });
         },
 
         /*
@@ -233,8 +301,112 @@ $(function(){
          * ******************************************
          */
 
+        aboutGame : function(){
+            JIQ.el.vintageTxt('reset',[
+                "This game is a fun little",
+                "Diversion for friends and family",
+                "of Jen Boger and Ian Warrington",
+                "to catch a glimpse of what they",
+                "find interesting, and what also",
+                "what they might have learned",
+                "when earning that massive pile",
+                "of college degrees.",
+                " ",
+                "1. Return to Main Menu"
+            ]);
+            JIQ.setButtonAction(1, 'begin', true);
+        },
+
+        catFact : function() {
+            JIQ.el.vintageTxt('reset',[
+
+                 '             MMMM88&&&&&&&       * ',
+                 ' *           MMM88&&&&&&&&         ',
+                 '             MMM88&&&&&&&&         ',
+                 '             `MMM88&&&&&&`         ',
+                 '               `MMM8&&&`      *    ',
+                 '      |\\___/|     /\\___/\\       ',
+                 '      )     (     )    ~( .        ',
+                 '     =\\     /=   =\\~    /=       ',
+                 '       )===(       ) ~ (           ',
+                 '      /     \\     /     \\        ',
+                 '      |     |     ) ~   (          ',
+                 '     /       \\   /     ~ \\       ',
+                 '     \\       /   \\~     ~/       ',
+                 ' _/\\_/\\__  _/_/\\_/\\__~__/_/\\_/',
+                 ' |  |  |( (  |  |  | ))  |  |  |  |',
+                 ' |  |  | ) ) |  |  |//|  |  |  |  |',
+                 ' |  |  |(_(  |  |  (( |  |  |  |  |',
+                 ' |  |  |  |  |  |  |\\)|  |  |  |  ',
+                 '  *+*+* JEN & IAN 07/13/2013 *+*+* ',
+                '1. Return to Main Menu'
+            ]);
+            JIQ.setButtonAction(1, 'begin', true);
+        },
+
         viewHighScores : function() {
-           console.log("View High Scores");
+            console.log("View High Scores");
+            JIQ.P.query.find({
+                success : function(results) {
+                    if(results.length > 0) {
+                        JIQ.displayHighScores(results);
+                    }
+                },
+
+                error : function(error) {
+                    console.log("Error: " + error.code + " " + error.message);
+                }
+            });
+        },
+
+        displayHighScores : function(scores) {
+            var texts = ["   Name           Correct  Score"];
+
+            scores.forEach(function(el, i){
+                var name = JIQ.padOrTruncate(el.get('name'),15);
+
+                texts.push( (i + 1).toString()
+                    + ". " + name
+                    + "  " + el.get('correct') + "/10    "
+                    + " "  + el.get('score')
+                );
+            });
+            texts.push(" ");
+            texts.push("Press 1 for Main Menu");
+
+            JIQ.el.vintageTxt('reset',texts);
+            JIQ.setButtonAction(1, 'begin', true);
+        },
+
+        padOrTruncate : function(word, len) {
+            var retWord = '';
+            var spaces = '';
+            for (var i = 0; i <= len; i++){
+                spaces += ' ';
+            }
+
+            if(name.length > len) {
+                retWord = word.substr(0, len-1);
+            } else {
+                retWord = (word + spaces).slice(0,len-1);
+            }
+            return retWord;
+        },
+
+        resetData : function() {
+            JIQ.Data = {
+                jenCategory : {},
+                ianCategory : {},
+                questions : [],
+                currentQuestion: 0,
+                answerKey : [],
+                answers : [],
+                timerStart : 0,
+                timerEnd : 0,
+                name: "",
+                score : 0,
+                correct: 0
+            };
         },
 
         noAction : function(e) {
