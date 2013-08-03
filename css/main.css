@@ -64,6 +64,16 @@ textarea {
     text-align: center;
 }
 
+#highScore {
+	font-size: 2em;
+	text-align: center;
+	margin: 1em auto;
+	color: grey;
+}
+
+#highScore a:visited {
+	color: grey;
+}
 /* globals */
 
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold);

@@ -32,8 +32,8 @@
      'overlayImage'     : null
     ,'text'             : ['All your base','are belong to us.']
     ,'maxRows'          : 15
-    ,'textSpeed'        : 30
-    ,'linePause'        : 10
+    ,'textSpeed'        : 40
+    ,'linePause'        : 50
     ,'promptEnabled'    : true
     ,'autoStart'        : true
     ,'onEnterKey'       : null

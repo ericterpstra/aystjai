@@ -86,8 +86,8 @@ $(function(){
         begin : function() {
             this.el.vintageTxt({
                 text: JIQ.introText,
-                textSpeed: 15,
-                linePause: 10,
+                textSpeed: 40,
+                linePause: 300,
                 promptEnabled: false
             });
 
@@ -100,7 +100,7 @@ $(function(){
 
         startGame : function() {
             JIQ.el.vintageTxt('playMany',[
-                ["There object of this game is to",
+                ["The object of this game is to",
                  "answer 10 questions as quickly as possible.",
                  "Pick a category from each of",
                  "Jen and Ian's areas of expertise.",
@@ -111,6 +111,7 @@ $(function(){
         },
 
         selectJenCategory : function() {
+					  JIQ.resetData();
             var choices = ["Jen's Categories:"];
             $(jenCategories).each(function(i, item){
                 choices.push((i+1).toString() + ". " + item.name);
@@ -243,7 +244,9 @@ $(function(){
                 "You got " + JIQ.Data.correct + " / 10 correct.",
                 "You scored " + JIQ.Data.score.toString(),
                 " ",
-                "Please Enter Your Name:"
+                "Please Enter Your Name Below",
+								"(Tap the screen on mobile devices)",
+								"Then press 1 to continue"
             ],
             {
                 onFinishedTyping: function(){$('#vtxt_ContentInput').focus()},
@@ -307,7 +310,7 @@ $(function(){
                 "Diversion for friends and family",
                 "of Jen Boger and Ian Warrington",
                 "to catch a glimpse of what they",
-                "find interesting, and what also",
+                "find interesting, and also",
                 "what they might have learned",
                 "when earning that massive pile",
                 "of college degrees.",
