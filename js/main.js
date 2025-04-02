@@ -1,16 +1,16 @@
 ;
-$(function(){
+$(function () {
     var JIQ = {
         el: $('#vintageTxtContainer'),
 
-        buttons: [ '',
-          $('#btn1'),
-          $('#btn2'),
-          $('#btn3'),
-          $('#btn4')
+        buttons: ['',
+            $('#btn1'),
+            $('#btn2'),
+            $('#btn3'),
+            $('#btn4')
         ],
 
-        buttonHandlers : [ '',
+        buttonHandlers: ['',
             'noAction',
             'noAction',
             'noAction',
@@ -18,32 +18,32 @@ $(function(){
         ],
 
         Data: {
-            jenCategory : {},
-            ianCategory : {},
-            questions : [],
+            jenCategory: {},
+            ianCategory: {},
+            questions: [],
             currentQuestion: 0,
-            answerKey : [],
-            answers : [],
-            timerStart : 0,
-            timerEnd : 0,
+            answerKey: [],
+            answers: [],
+            timerStart: 0,
+            timerEnd: 0,
             name: "",
-            score : 0,
+            score: 0,
             correct: 0
         },
 
-        P : {
-            Board : {},
-            query : {}
+        P: {
+            Board: {},
+            query: {}
         },
 
-        init : function() {
+        init: function () {
 
             // INIT BUTTON CLICK HANDLERS
-            for (var i = 1; i < JIQ.buttons.length; i++ ) {
-                JIQ.buttons[i].click(function(e, btn){
-                    var btnValue =  +$(this).attr('data-value')
+            for (var i = 1; i < JIQ.buttons.length; i++) {
+                JIQ.buttons[i].click(function (e, btn) {
+                    var btnValue = +$(this).attr('data-value')
                     var action = JIQ.buttonHandlers[btnValue];
-                    if(JIQ[action]) {
+                    if (JIQ[action]) {
                         JIQ[action](btnValue)
                     } else {
                         JIQ.noAction(e);
@@ -52,11 +52,11 @@ $(function(){
             }
 
             // SET UP PARSE
-            Parse.initialize("hZ0hl9heShCM59t71ycXjmkQzrbL7F8lafLSqmmT", "oND7OhOLY1XSa59D7LlOdMbR46XT5CsLEeimJD1Q");
-            JIQ.P.Board = Parse.Object.extend('Scores');
-            JIQ.P.query = new Parse.Query(JIQ.P.Board);
-            JIQ.P.query.descending('score');
-            JIQ.P.query.limit(12);
+            //Parse.initialize("hZ0hl9heShCM59t71ycXjmkQzrbL7F8lafLSqmmT", "oND7OhOLY1XSa59D7LlOdMbR46XT5CsLEeimJD1Q");
+            //JIQ.P.Board = Parse.Object.extend('Scores');
+            //JIQ.P.query = new Parse.Query(JIQ.P.Board);
+            // JIQ.P.query.descending('score');
+            // JIQ.P.query.limit(12);
 
 
             JIQ.begin();
@@ -70,7 +70,7 @@ $(function(){
         * ******************************************
         */
 
-        introText : [
+        introText: [
             "WELCOME TO:",
             " ",
             '"ARE YOU SMARTER THAN JEN AND IAN?"',
@@ -83,7 +83,7 @@ $(function(){
             "4. CATS."
         ],
 
-        begin : function() {
+        begin: function () {
             this.el.vintageTxt({
                 text: JIQ.introText,
                 textSpeed: 40,
@@ -94,29 +94,29 @@ $(function(){
             JIQ.setButtonAction(1, 'startGame', true);
             JIQ.setButtonAction(2, 'viewHighScores', false);
             JIQ.setButtonAction(3, 'aboutGame', false);
-            JIQ.setButtonAction(4, 'catFact',false);
+            JIQ.setButtonAction(4, 'catFact', false);
             //JIQ.setButtonAction(4, 'endQuiz',false);
         },
 
-        startGame : function() {
-            JIQ.el.vintageTxt('playMany',[
+        startGame: function () {
+            JIQ.el.vintageTxt('playMany', [
                 ["The object of this game is to",
-                 "answer 10 questions as quickly as possible.",
-                 "Pick a category from each of",
-                 "Jen and Ian's areas of expertise.",
-                 "Press 1 to continue."
+                    "answer 10 questions as quickly as possible.",
+                    "Pick a category from each of",
+                    "Jen and Ian's areas of expertise.",
+                    "Press 1 to continue."
                 ]
             ]);
             JIQ.setButtonAction(1, 'selectJenCategory', true);
         },
 
-        selectJenCategory : function() {
-					  JIQ.resetData();
+        selectJenCategory: function () {
+            JIQ.resetData();
             var choices = ["Jen's Categories:"];
-            $(jenCategories).each(function(i, item){
-                choices.push((i+1).toString() + ". " + item.name);
-                if(choices.length === jenCategories.length){
-                    JIQ.el.vintageTxt('playMany',[choices]);
+            $(jenCategories).each(function (i, item) {
+                choices.push((i + 1).toString() + ". " + item.name);
+                if (choices.length === jenCategories.length) {
+                    JIQ.el.vintageTxt('playMany', [choices]);
                     JIQ.setButtonAction(1, 'setJenCategory', true);
                     JIQ.setButtonAction(2, 'setJenCategory', false);
                     JIQ.setButtonAction(3, 'setJenCategory', false);
@@ -125,17 +125,17 @@ $(function(){
             });
         },
 
-        setJenCategory : function(num) {
+        setJenCategory: function (num) {
             JIQ.Data.jenCategory = jenCategories[+num - 1];
             JIQ.selectIanCategory();
         },
 
-        selectIanCategory : function() {
+        selectIanCategory: function () {
             var choices = ["Ian's Categories:"];
-            $(ianCategories).each(function(i, item){
-                choices.push((i+1).toString() + ". " + item.name);
-                if(choices.length === ianCategories.length){
-                    JIQ.el.vintageTxt('playMany',[choices]);
+            $(ianCategories).each(function (i, item) {
+                choices.push((i + 1).toString() + ". " + item.name);
+                if (choices.length === ianCategories.length) {
+                    JIQ.el.vintageTxt('playMany', [choices]);
                     JIQ.setButtonAction(1, 'setIanCategory', true);
                     JIQ.setButtonAction(2, 'setIanCategory', false);
                     JIQ.setButtonAction(3, 'setIanCategory', false);
@@ -144,13 +144,13 @@ $(function(){
             });
         },
 
-        setIanCategory : function(num) {
+        setIanCategory: function (num) {
             JIQ.Data.ianCategory = ianCategories[+num - 1];
             JIQ.readyPlayerOne();
         },
 
-        readyPlayerOne : function() {
-            JIQ.el.vintageTxt('reset',[
+        readyPlayerOne: function () {
+            JIQ.el.vintageTxt('reset', [
                 "The categories you chose are:",
                 "Jen - " + JIQ.Data.jenCategory.name,
                 "Ian - " + JIQ.Data.ianCategory.name,
@@ -169,19 +169,19 @@ $(function(){
          * ******************************************
          */
 
-        startQuestioning : function() {
+        startQuestioning: function () {
             console.log('start questions.');
             var jenQuestions = questions[JIQ.Data.jenCategory.index].Questions;
             var ianQuestions = questions[JIQ.Data.ianCategory.index].Questions;
             JIQ.Data.questions = jenQuestions.concat(ianQuestions);
-            $(JIQ.Data.questions).each(function(){
+            $(JIQ.Data.questions).each(function () {
                 JIQ.Data.answerKey.push(this.correctAnswer)
             });
 
             JIQ.askQuestion(0);
         },
 
-        askQuestion : function(qNum) {
+        askQuestion: function (qNum) {
 
             var texts = [];
 
@@ -197,13 +197,13 @@ $(function(){
             JIQ.Data.currentQuestion = qNum;
 
             JIQ.el.vintageTxt('reset'
-                ,texts
-                ,{onFinishedTyping: JIQ.startAnswerTime}
+                , texts
+                , { onFinishedTyping: JIQ.startAnswerTime }
             );
 
         },
 
-        startAnswerTime : function(){
+        startAnswerTime: function () {
             JIQ.setButtonAction(1, 'answerQuestion', true);
             JIQ.setButtonAction(2, 'answerQuestion', false);
             JIQ.setButtonAction(3, 'answerQuestion', false);
@@ -212,7 +212,7 @@ $(function(){
 
         },
 
-        answerQuestion : function(aNum) {
+        answerQuestion: function (aNum) {
             JIQ.Data.timerEnd = Date.now();
             var nextQuestionNum = JIQ.Data.currentQuestion + 1;
             var correctAnswer = JIQ.Data.questions[JIQ.Data.currentQuestion].correctAnswer;
@@ -220,15 +220,15 @@ $(function(){
             var answerBonus = 0;
 
             // Tabulate score
-            if( aNum.toString() === correctAnswer ) {
-                if(answerTime <= 10){
+            if (aNum.toString() === correctAnswer) {
+                if (answerTime <= 10) {
                     answerBonus = (100 / (answerTime / 10 * 4)) | 0;
                 }
                 JIQ.Data.score += (100 + answerBonus);
                 JIQ.Data.correct += 1;
             }
 
-            if ( nextQuestionNum >= JIQ.Data.questions.length ) {
+            if (nextQuestionNum >= JIQ.Data.questions.length) {
                 console.log("Quiz is over. Score is " + JIQ.Data.score)
                 JIQ.endQuiz();
             } else {
@@ -237,48 +237,48 @@ $(function(){
             }
         },
 
-        endQuiz : function() {
+        endQuiz: function () {
             JIQ.clearButtonHandlers();
-            JIQ.el.vintageTxt('reset',[
+            JIQ.el.vintageTxt('reset', [
                 "And we're done!",
                 "You got " + JIQ.Data.correct + " / 10 correct.",
                 "You scored " + JIQ.Data.score.toString(),
                 " ",
                 "Please Enter Your Name Below",
-								"(Tap the screen on mobile devices)",
-								"Then press 1 to continue"
+                "(Tap the screen on mobile devices)",
+                "Then press 1 to continue"
             ],
-            {
-                onFinishedTyping: function(){$('#vtxt_ContentInput').focus()},
-                promptEnabled: true,
-                onEnterKey: JIQ.acceptFinalScore
-            });
+                {
+                    onFinishedTyping: function () { $('#vtxt_ContentInput').focus() },
+                    promptEnabled: true,
+                    onEnterKey: JIQ.acceptFinalScore
+                });
             JIQ.setButtonAction(1, 'acceptFinalScore', true);
         },
 
-        acceptFinalScore : function(data) {
+        acceptFinalScore: function (data) {
             JIQ.Data.name = $('#vtxt_ContentInput').val();
-            JIQ.saveScoreToParse();
+            //JIQ.saveScoreToParse();
 
             JIQ.clearButtonHandlers();
-            JIQ.el.vintageTxt('reset',[
+            JIQ.el.vintageTxt('reset', [
                 "Thanks " + JIQ.Data.name,
                 "Please choose what to do next:",
                 "1. View High Scores",
                 "2. More Trivia!",
                 "3. Main Menu"
             ],
-            {
-                onFinishedTyping: null,
-                promptEnabled: false,
-                onEnterKey: null
-            });
+                {
+                    onFinishedTyping: null,
+                    promptEnabled: false,
+                    onEnterKey: null
+                });
             JIQ.setButtonAction(1, 'viewHighScores', false);
             JIQ.setButtonAction(2, 'selectJenCategory', false);
             JIQ.setButtonAction(3, 'begin', false);
         },
 
-        saveScoreToParse : function(){
+        saveScoreToParse: function () {
             var gameScore = new JIQ.P.Board();
             gameScore.set('name', JIQ.Data.name);
             gameScore.set('score', JIQ.Data.score);
@@ -287,10 +287,10 @@ $(function(){
             gameScore.set('jenCategory', JIQ.Data.jenCategory.name);
 
             gameScore.save(null, {
-                success: function(gameScore) {
+                success: function (gameScore) {
                     console.log("Score Saved to Leaderboard");
                 },
-                error: function(gameScore, error) {
+                error: function (gameScore, error) {
                     console.log("Failed to Save Score. " + error.description);
                 }
             });
@@ -304,8 +304,8 @@ $(function(){
          * ******************************************
          */
 
-        aboutGame : function(){
-            JIQ.el.vintageTxt('reset',[
+        aboutGame: function () {
+            JIQ.el.vintageTxt('reset', [
                 "This game is a fun little",
                 "Diversion for friends and family",
                 "of Jen Boger and Ian Warrington",
@@ -320,111 +320,112 @@ $(function(){
             JIQ.setButtonAction(1, 'begin', true);
         },
 
-        catFact : function() {
-            JIQ.el.vintageTxt('reset',[
+        catFact: function () {
+            JIQ.el.vintageTxt('reset', [
 
-                 '             MMMM88&&&&&&&       * ',
-                 ' *           MMM88&&&&&&&&         ',
-                 '             MMM88&&&&&&&&         ',
-                 '             `MMM88&&&&&&`         ',
-                 '               `MMM8&&&`      *    ',
-                 '      |\\___/|     /\\___/\\       ',
-                 '      )     (     )    ~( .        ',
-                 '     =\\     /=   =\\~    /=       ',
-                 '       )===(       ) ~ (           ',
-                 '      /     \\     /     \\        ',
-                 '      |     |     ) ~   (          ',
-                 '     /       \\   /     ~ \\       ',
-                 '     \\       /   \\~     ~/       ',
-                 ' _/\\_/\\__  _/_/\\_/\\__~__/_/\\_/',
-                 ' |  |  |( (  |  |  | ))  |  |  |  |',
-                 ' |  |  | ) ) |  |  |//|  |  |  |  |',
-                 ' |  |  |(_(  |  |  (( |  |  |  |  |',
-                 ' |  |  |  |  |  |  |\\)|  |  |  |  ',
-                 '  *+*+* JEN & IAN 07/13/2013 *+*+* ',
+                '             MMMM88&&&&&&&       * ',
+                ' *           MMM88&&&&&&&&         ',
+                '             MMM88&&&&&&&&         ',
+                '             `MMM88&&&&&&`         ',
+                '               `MMM8&&&`      *    ',
+                '      |\\___/|     /\\___/\\       ',
+                '      )     (     )    ~( .        ',
+                '     =\\     /=   =\\~    /=       ',
+                '       )===(       ) ~ (           ',
+                '      /     \\     /     \\        ',
+                '      |     |     ) ~   (          ',
+                '     /       \\   /     ~ \\       ',
+                '     \\       /   \\~     ~/       ',
+                ' _/\\_/\\__  _/_/\\_/\\__~__/_/\\_/',
+                ' |  |  |( (  |  |  | ))  |  |  |  |',
+                ' |  |  | ) ) |  |  |//|  |  |  |  |',
+                ' |  |  |(_(  |  |  (( |  |  |  |  |',
+                ' |  |  |  |  |  |  |\\)|  |  |  |  ',
+                '  *+*+* JEN & IAN 07/13/2013 *+*+* ',
                 '1. Return to Main Menu'
             ]);
             JIQ.setButtonAction(1, 'begin', true);
         },
 
-        viewHighScores : function() {
+        viewHighScores: function () {
             console.log("View High Scores");
-            JIQ.P.query.find({
-                success : function(results) {
-                    if(results.length > 0) {
-                        JIQ.displayHighScores(results);
-                    }
-                },
+            JIQ.displayHighScores();
+            // JIQ.P.query.find({
+            //     success: function (results) {
+            //         if (results.length > 0) {
+            //         }
+            //     },
 
-                error : function(error) {
-                    console.log("Error: " + error.code + " " + error.message);
-                }
-            });
+            //     error: function (error) {
+            //         console.log("Error: " + error.code + " " + error.message);
+            //     }
+            // });
         },
 
-        displayHighScores : function(scores) {
-            var texts = ["   Name           Correct  Score"];
+        displayHighScores: function (scores) {
+            var texts = ["Sorry, this feature is currently out of order."];
+            //var texts = ["   Name           Correct  Score"];
 
-            scores.forEach(function(el, i){
-                var name = JIQ.padOrTruncate(el.get('name'),15);
+            // scores.forEach(function (el, i) {
+            //     var name = JIQ.padOrTruncate(el.get('name'), 15);
 
-                texts.push( (i + 1).toString()
-                    + ". " + name
-                    + "  " + el.get('correct') + "/10    "
-                    + " "  + el.get('score')
-                );
-            });
+            //     texts.push((i + 1).toString()
+            //         + ". " + name
+            //         + "  " + el.get('correct') + "/10    "
+            //         + " " + el.get('score')
+            //     );
+            // });
             texts.push(" ");
             texts.push("Press 1 for Main Menu");
 
-            JIQ.el.vintageTxt('reset',texts);
+            JIQ.el.vintageTxt('reset', texts);
             JIQ.setButtonAction(1, 'begin', true);
         },
 
-        padOrTruncate : function(word, len) {
+        padOrTruncate: function (word, len) {
             var retWord = '';
             var spaces = '';
-            for (var i = 0; i <= len; i++){
+            for (var i = 0; i <= len; i++) {
                 spaces += ' ';
             }
 
-            if(name.length > len) {
-                retWord = word.substr(0, len-1);
+            if (name.length > len) {
+                retWord = word.substr(0, len - 1);
             } else {
-                retWord = (word + spaces).slice(0,len-1);
+                retWord = (word + spaces).slice(0, len - 1);
             }
             return retWord;
         },
 
-        resetData : function() {
+        resetData: function () {
             JIQ.Data = {
-                jenCategory : {},
-                ianCategory : {},
-                questions : [],
+                jenCategory: {},
+                ianCategory: {},
+                questions: [],
                 currentQuestion: 0,
-                answerKey : [],
-                answers : [],
-                timerStart : 0,
-                timerEnd : 0,
+                answerKey: [],
+                answers: [],
+                timerStart: 0,
+                timerEnd: 0,
                 name: "",
-                score : 0,
+                score: 0,
                 correct: 0
             };
         },
 
-        noAction : function(e) {
+        noAction: function (e) {
             console.log("There is no action for this button.");
         },
 
-        setButtonAction : function(btnNum, action, clearAll) {
-            if(clearAll) JIQ.clearButtonHandlers();
+        setButtonAction: function (btnNum, action, clearAll) {
+            if (clearAll) JIQ.clearButtonHandlers();
             JIQ.buttonHandlers[btnNum] = action;
             console.log('Button ' + btnNum + ' assigned to perform ' + action);
         },
 
-        clearButtonHandlers : function() {
+        clearButtonHandlers: function () {
             console.log('Button actions cleared.')
-            JIQ.buttonHandlers = [ '',
+            JIQ.buttonHandlers = ['',
                 'noAction',
                 'noAction',
                 'noAction',

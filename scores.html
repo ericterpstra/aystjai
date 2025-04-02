@@ -15,44 +15,45 @@
     <script src="js/vendor/footable.js" type="text/javascript"></script>
     <script src="js/vendor/footable.sortable.js" type="text/javascript"></script>
 
-    <script src="http://www.parsecdn.com/js/parse-1.2.8.min.js"></script>
+    <!-- <script src="http://www.parsecdn.com/js/parse-1.2.8.min.js"></script> -->
 
 
     <script type="text/javascript">
         $(function() {
-            Parse.initialize("hZ0hl9heShCM59t71ycXjmkQzrbL7F8lafLSqmmT", "oND7OhOLY1XSa59D7LlOdMbR46XT5CsLEeimJD1Q");
-            var board = Parse.Object.extend('Scores');
-            var query = new Parse.Query(board);
-            query.descending('score');
+            // Parse.initialize("hZ0hl9heShCM59t71ycXjmkQzrbL7F8lafLSqmmT", "oND7OhOLY1XSa59D7LlOdMbR46XT5CsLEeimJD1Q");
+            // var board = Parse.Object.extend('Scores');
+            // var query = new Parse.Query(board);
+            // query.descending('score');
 
-            query.find({
-                success : function(results) {
-                    if(results.length > 0) {
-                        var $tbody = $('#tbody');
-                        results.forEach(function(el, i){
-                            var tr = '<tr>'
-                            +  '<td >'+ el.get('name') +'</td>'
-                            +  '<td data-value="' + el.get('score') + '">'+ el.get('score') +'</td>'
-                            +  '<td data-value="'+ el.get('correct') +'"> '+ el.get('correct') +' </td>'
-                            +  '<td>'+ el.get('jenCategory') +'</td>'
-                            +  '<td>'+ el.get('ianCategory') +'</td>'
-                            +  '</tr>'
+            // query.find({
+            //     success : function(results) {
+            //         if(results.length > 0) {
+            //             var $tbody = $('#tbody');
+            //             results.forEach(function(el, i){
+            //                 var tr = '<tr>'
+            //                 +  '<td >'+ el.get('name') +'</td>'
+            //                 +  '<td data-value="' + el.get('score') + '">'+ el.get('score') +'</td>'
+            //                 +  '<td data-value="'+ el.get('correct') +'"> '+ el.get('correct') +' </td>'
+            //                 +  '<td>'+ el.get('jenCategory') +'</td>'
+            //                 +  '<td>'+ el.get('ianCategory') +'</td>'
+            //                 +  '</tr>'
 
-                            $tbody.append(tr);
-                        });
-                        $('table').footable();
-                    }
-                },
+            //                 $tbody.append(tr);
+            //             });
+            //             $('table').footable();
+            //         }
+            //     },
 
-                error : function(error) {
-                    console.log("Error: " + error.code + " " + error.message);
-                }
-            });
+            //     error : function(error) {
+            //         console.log("Error: " + error.code + " " + error.message);
+            //     }
+            // });
 
         });
     </script>
 </head>
 <body>
+    <h1>OUT OF ORDER :(</h1>
 <table class="footable">
     <thead>
     <tr>
